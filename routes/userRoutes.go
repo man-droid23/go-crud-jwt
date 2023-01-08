@@ -8,8 +8,8 @@ import (
 
 func UserRoutes(r *fiber.App) {
 	r.Get("/users", middleware.AuthMiddleware, userControllers.GetAll)
-	r.Get("/users/:id", userControllers.GetUser)
-	r.Post("/users", userControllers.CreateUser)
-	r.Put("/users/:id", userControllers.UpdateUser)
-	r.Delete("/users/:id", userControllers.DeleteUser)
+	r.Get("/users/:id", middleware.AuthMiddleware, userControllers.GetUser)
+	r.Post("/users", middleware.AuthMiddleware, userControllers.CreateUser)
+	r.Put("/users/:id", middleware.AuthMiddleware, userControllers.UpdateUser)
+	r.Delete("/users/:id", middleware.AuthMiddleware, userControllers.DeleteUser)
 }

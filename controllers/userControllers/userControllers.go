@@ -5,6 +5,7 @@ import (
 	"fiber-rest/models/entity"
 	"fiber-rest/models/requests"
 	"fiber-rest/models/response"
+	"fiber-rest/utils"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
 )
@@ -60,6 +61,16 @@ func CreateUser(ctx *fiber.Ctx) error {
 		Email:    users.Email,
 		Password: users.Password,
 	}
+
+	hashPass, err := utils.HashPassword(users.Password)
+	if err != nil {
+		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"Message": "Failed to Hash Password",
+			"Error":   err.Error(),
+		})
+	}
+	newUser.Password = hashPass
+
 	errCreateUser := db.DB.Create(&newUser).Error
 	if errCreateUser != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{
